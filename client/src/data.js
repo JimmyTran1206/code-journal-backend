@@ -37,11 +37,28 @@ export async function addEntry(entry) {
   }
 }
 
-export function updateEntry(entry) {
-  const newEntries = data.entries.map((e) =>
-    e.entryId === entry.entryId ? entry : e
-  );
-  data.entries = newEntries;
+export async function updateEntry(entry) {
+  try {
+    const reqMethod = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(entry),
+    };
+    const response = await fetch(`/api/journals/${entry.entryId}`, reqMethod);
+    if (!response.ok) {
+      throw new Error(`fetching error status ${response.status}`);
+    }
+    const data = await response.json();
+    console.log(data);
+  } catch (err) {
+    console.error(err);
+  }
+  // const newEntries = data.entries.map((e) =>
+  //   e.entryId === entry.entryId ? entry : e
+  // );
+  // data.entries = newEntries;
 }
 
 export function removeEntry(entryId) {
