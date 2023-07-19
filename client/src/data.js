@@ -1,25 +1,4 @@
-let data = {
-  entries: [],
-  nextEntryId: 1,
-};
-
-window.addEventListener('beforeunload', function (event) {
-  const dataJSON = JSON.stringify(data);
-  localStorage.setItem('code-journal-data', dataJSON);
-});
-
-const localData = JSON.parse(localStorage.getItem('code-journal-data'));
-if (localData) {
-  data = localData;
-}
-
-export function readEntries() {
-  return data.entries;
-}
-
 export async function addEntry(entry) {
-  // entry.entryId = data.nextEntryId++;
-  // data.entries.unshift(entry);
   try {
     const reqMethod = {
       method: 'POST',
@@ -51,10 +30,6 @@ export async function updateEntry(entry) {
   } catch (err) {
     console.error(err);
   }
-  // const newEntries = data.entries.map((e) =>
-  //   e.entryId === entry.entryId ? entry : e
-  // );
-  // data.entries = newEntries;
 }
 
 export async function removeEntry(entryId) {
@@ -69,8 +44,4 @@ export async function removeEntry(entryId) {
   } catch (err) {
     console.error(err);
   }
-  // const updatedArray = data.entries.filter(
-  //   (entry) => entry.entryId !== entryId
-  // );
-  // data.entries = updatedArray;
 }

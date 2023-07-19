@@ -1,4 +1,3 @@
-import { readEntries } from './data';
 import { useEffect, useState } from 'react';
 
 export default function EntryList({ onCreate, onEdit }) {
@@ -22,7 +21,7 @@ export default function EntryList({ onCreate, onEdit }) {
       getEntries();
     }
   }, []);
-  // const entries = readEntries();
+
   return (
     <div className="container">
       <div className="row">
