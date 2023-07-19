@@ -17,9 +17,24 @@ export function readEntries() {
   return data.entries;
 }
 
-export function addEntry(entry) {
-  entry.entryId = data.nextEntryId++;
-  data.entries.unshift(entry);
+export async function addEntry(entry) {
+  // entry.entryId = data.nextEntryId++;
+  // data.entries.unshift(entry);
+  try {
+    const reqMethod = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry),
+    };
+    const response = await fetch('/api/entries', reqMethod);
+    if (!response.ok) {
+      throw new Error(`fetching error status ${response.status}`);
+    }
+    const data = await response.json();
+    console.log(data);
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 export function updateEntry(entry) {

@@ -1,7 +1,28 @@
 import { readEntries } from './data';
+import { useEffect, useState } from 'react';
 
 export default function EntryList({ onCreate, onEdit }) {
-  const entries = readEntries();
+  const [entries, setEntries] = useState([]);
+  const [error, setError] = useState();
+  useEffect(() => {
+    async function getEntries() {
+      try {
+        const response = await fetch(`/api/entries`);
+        if (!response.ok) {
+          throw new Error(`Error fetching status ${response.status}`);
+        }
+        const data = await response.json();
+        setEntries(data);
+      } catch (err) {
+        setError(err);
+        console.error(err);
+      }
+    }
+    if (!entries[0]) {
+      getEntries();
+    }
+  }, []);
+  // const entries = readEntries();
   return (
     <div className="container">
       <div className="row">
