@@ -19,7 +19,8 @@ app.use(errorMiddleware);
 const queryObject = {
   get: `
   select *
-    from "entries";
+    from "entries"
+    order by "entryId";
   `,
 
   post: `
@@ -52,12 +53,11 @@ app.get('/api/entries', async (req, res, next) => {
 app.post('/api/entries', async (req, res, next) => {
   try {
     const sql = queryObject.post;
-    const title = req.body.title;
-    const notes = req.body.notes;
-    const photoUrl = req.body.photoUrl;
+    const { title, notes, photoUrl } = req.body;
     const params = [title, notes, photoUrl];
     const result = await db.query(sql, params);
-    res.status(201).json(result.rows);
+    const [entry] = result.rows;
+    res.status(201).json(entry);
   } catch (err) {
     next(err);
   }
@@ -65,18 +65,20 @@ app.post('/api/entries', async (req, res, next) => {
 
 app.put('/api/entries/:entryId', async (req, res, next) => {
   try {
-    const entryId = req.params.entryId;
-    const title = req.body.title;
-    const notes = req.body.notes;
-    const photoUrl = req.body.photoUrl;
-    // error handling for bad requests: negative/invalid id , non-existence id
-
-    // id is valid
+    const entryId = Number(req.params.entryId);
+    if (!Number.isInteger(entryId) || entryId <= 0) {
+      throw new ClientError(400, 'entryId must be a positive integer');
+    }
+    const { title, notes, photoUrl } = req.body;
     const sql = queryObject.put;
     const params = [title, notes, photoUrl, entryId];
     const result = await db.query(sql, params);
+    const [entry] = result.rows;
+    if (!entry) {
+      throw new ClientError(404, `Unable to find entryId ${entryId}`);
+    }
     console.log(result);
-    res.status(204).json(result.rows);
+    res.status(204).json(entry);
   } catch (err) {
     next(err);
   }
