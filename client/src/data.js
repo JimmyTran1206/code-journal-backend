@@ -30,8 +30,6 @@ export async function addEntry(entry) {
     if (!response.ok) {
       throw new Error(`fetching error status ${response.status}`);
     }
-    const data = await response.json();
-    console.log(data);
   } catch (err) {
     console.error(err);
   }
@@ -50,8 +48,6 @@ export async function updateEntry(entry) {
     if (!response.ok) {
       throw new Error(`fetching error status ${response.status}`);
     }
-    const data = await response.json();
-    console.log(data);
   } catch (err) {
     console.error(err);
   }
@@ -70,8 +66,6 @@ export async function removeEntry(entryId) {
     if (!response.ok) {
       throw new Error(`fetching error status ${response.status}`);
     }
-    const data = await response.json();
-    console.log(data);
   } catch (err) {
     console.error(err);
   }

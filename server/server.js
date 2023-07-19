@@ -84,7 +84,6 @@ app.put('/api/entries/:entryId', async (req, res, next) => {
     if (!entry) {
       throw new ClientError(404, `Unable to find entryId ${entryId}`);
     }
-    console.log(result);
     res.status(201).json(entry);
   } catch (err) {
     next(err);
@@ -104,7 +103,6 @@ app.delete('/api/entries/:entryId', async (req, res, next) => {
     if (!entry) {
       throw new ClientError(404, `Unable to find entryId ${entryId}`);
     }
-    console.log(entry);
     res.status(201).json(entry);
   } catch (err) {
     next(err);
