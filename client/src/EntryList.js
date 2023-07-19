@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 export default function EntryList({ onCreate, onEdit }) {
   const [entries, setEntries] = useState([]);
-  const [error, setError] = useState();
+
   useEffect(() => {
     async function getEntries() {
       try {
@@ -13,14 +13,14 @@ export default function EntryList({ onCreate, onEdit }) {
         const data = await response.json();
         setEntries(data);
       } catch (err) {
-        setError(err);
+        console.error(err);
         console.error(err);
       }
     }
     if (!entries[0]) {
       getEntries();
     }
-  }, []);
+  }, [entries]);
 
   return (
     <div className="container">
