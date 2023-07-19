@@ -46,7 +46,7 @@ export async function updateEntry(entry) {
       },
       body: JSON.stringify(entry),
     };
-    const response = await fetch(`/api/journals/${entry.entryId}`, reqMethod);
+    const response = await fetch(`/api/entries/${entry.entryId}`, reqMethod);
     if (!response.ok) {
       throw new Error(`fetching error status ${response.status}`);
     }
@@ -61,9 +61,22 @@ export async function updateEntry(entry) {
   // data.entries = newEntries;
 }
 
-export function removeEntry(entryId) {
-  const updatedArray = data.entries.filter(
-    (entry) => entry.entryId !== entryId
-  );
-  data.entries = updatedArray;
+export async function removeEntry(entryId) {
+  try {
+    const reqMethod = {
+      method: 'DELETE',
+    };
+    const response = await fetch(`/api/entries/${entryId}`, reqMethod);
+    if (!response.ok) {
+      throw new Error(`fetching error status ${response.status}`);
+    }
+    const data = await response.json();
+    console.log(data);
+  } catch (err) {
+    console.error(err);
+  }
+  // const updatedArray = data.entries.filter(
+  //   (entry) => entry.entryId !== entryId
+  // );
+  // data.entries = updatedArray;
 }

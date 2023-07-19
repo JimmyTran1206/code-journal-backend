@@ -37,6 +37,13 @@ const queryObject = {
   where "entryId"=$4
   returning *;
   `,
+
+  delete: `
+  delete
+  from "entries"
+  where "entryId"=$1
+  returning *;
+  `,
 };
 
 // Routing functions
@@ -78,13 +85,31 @@ app.put('/api/entries/:entryId', async (req, res, next) => {
       throw new ClientError(404, `Unable to find entryId ${entryId}`);
     }
     console.log(result);
-    res.status(204).json(entry);
+    res.status(201).json(entry);
   } catch (err) {
     next(err);
   }
 });
 
-// Error functions
+app.delete('/api/entries/:entryId', async (req, res, next) => {
+  try {
+    const entryId = Number(req.params.entryId);
+    if (!Number.isInteger(entryId) || entryId <= 0) {
+      throw new ClientError(400, 'entryId must be a positive integer');
+    }
+    const sql = queryObject.delete;
+    const params = [entryId];
+    const result = await db.query(sql, params);
+    const [entry] = result.rows;
+    if (!entry) {
+      throw new ClientError(404, `Unable to find entryId ${entryId}`);
+    }
+    console.log(entry);
+    res.status(201).json(entry);
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`express server listening on port ${process.env.PORT}`);
